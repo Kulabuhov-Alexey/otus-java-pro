@@ -13,6 +13,10 @@ public class Customer {
         this.scores = scores;
     }
 
+    public Customer clone() {
+        return new Customer(id, name, scores);
+    }
+
     public long getId() {
         return id;
     }
@@ -49,7 +53,7 @@ public class Customer {
 
         Customer customer = (Customer) o;
 
-        if (id != customer.id) return false;
+        if (id == customer.id) return true;
         if (scores != customer.scores) return false;
         return name != null ? name.equals(customer.name) : customer.name == null;
     }
@@ -57,8 +61,8 @@ public class Customer {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (scores ^ (scores >>> 32));
+//        result = 31 * result + (name != null ? name.hashCode() : 0);
+//        result = 31 * result + (int) (scores ^ (scores >>> 32));
         return result;
     }
 }
