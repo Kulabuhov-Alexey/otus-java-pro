@@ -18,12 +18,12 @@ public class TestOtus {
 
     @Test
     public void test() {
-        System.out.println("Test method");
+        System.out.println("Test method for " + this);
     }
 
     @Test
     public void test2() {
-        System.out.println("Test2 method");
+        System.out.println("Test2 method " + this);
         throw new RuntimeException();
     }
 

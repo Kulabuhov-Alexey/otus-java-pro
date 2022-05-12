@@ -8,15 +8,18 @@ import java.util.stream.Collectors;
 public class Main {
     public static void main(String[] args) throws ClassNotFoundException {
         for (String arg : args) {
-            try {
-                setContainer(arg);
-                doBefore();
-                doTest();
-            } catch (RuntimeException ignore) {
-            } finally {
-                doAfter();
-                Container.printStatistic();
+            setContainer(arg);
+            for (Method method : getMethods(Container.getMethods(), "ru.otus.annotations.Test")) {
+                try {
+                    Container.setObject(instantiate(Container.getClazz()));
+                    doBefore();
+                    doTest(method);
+                } catch (RuntimeException ignore) {
+                } finally {
+                    doAfter();
+                }
             }
+            Container.printStatistic();
         }
     }
 
@@ -41,15 +44,14 @@ public class Main {
         getMethods(Container.getMethods(), "ru.otus.annotations.After").forEach(method -> callMethod(Container.getObject(), method.getName()));
     }
 
-    private static void doTest() {
-        for (Method method : getMethods(Container.getMethods(), "ru.otus.annotations.Test")) {
-            try {
-                callMethod(Container.getObject(), method.getName());
-                Container.getStatistic().replace("Passed test", Container.getStatistic().get("Passed test") + 1);
-            } catch (RuntimeException re) {
-                Container.getStatistic().replace("Failed test", Container.getStatistic().get("Failed test") + 1);
-            }
+    private static void doTest(Method method) {
+        try {
+            callMethod(Container.getObject(), method.getName());
+            Container.getStatistic().replace("Passed test", Container.getStatistic().get("Passed test") + 1);
+        } catch (RuntimeException re) {
+            Container.getStatistic().replace("Failed test", Container.getStatistic().get("Failed test") + 1);
         }
+
     }
 
     private static List<Method> getMethods(Method[] methods, String annotationName) {
